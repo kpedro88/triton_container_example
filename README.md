@@ -14,6 +14,7 @@ source env.sh
 
 Do this only the first time you clone the repository.
 If you only want to use Singularity, you can skip the Docker setup (and vice versa).
+Docker commands may need to be prepended with `sudo`.
 
 WARNING: the Triton image is 8 GB.
 

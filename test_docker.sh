@@ -1,6 +1,7 @@
 #!/bin/bash
 
 MAXTESTS=$1
+source env.sh
 
 for i in $(seq 1 $MAXTESTS); do
 	echo $i
