@@ -2,3 +2,4 @@
 models/
 triton/
 .local/
+.cache/

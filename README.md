@@ -18,7 +18,7 @@ Docker commands may need to be prepended with `sudo`.
 
 WARNING: the Triton image is 8 GB.
 
-Singularity:
+Singularity*:
 ```bash
 ./pull_singularity.sh
 ```
@@ -36,6 +36,12 @@ Model:
 Client:
 ```bash
 ./get_client.sh
+```
+
+\* If you want to use the sandbox from cvmfs instead of building a new one, skip this step and execute the following commands:
+```bash
+source common.sh
+export SANDBOX=/cvmfs/unpacked.cern.ch/registry.hub.docker.com/${IMAGE}
 ```
 
 ## Tests
