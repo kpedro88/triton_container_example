@@ -20,6 +20,12 @@ void throwIfError(const nic::Error& err, const std::string& msg) {
 	}
 }
 
+bool warnIfError(const nic::Error& err, const std::string& msg) {
+	if (!err.IsOk())
+		std::cout << "TritonServerWarning: " << msg << ": " << err << std::endl;
+	return err.IsOk();
+}
+
 int main(){
 	int64_t xdim(1433);
 	int64_t edim(2);
@@ -28,6 +34,11 @@ int main(){
 	std::unique_ptr<nic::InferenceServerGrpcClient> client;
 	throwIfError(nic::InferenceServerGrpcClient::Create(&client, "0.0.0.0:8001", false), "unable to create inference context");
 	nic::InferOptions options("gat_test");
+
+	inference::ModelConfigResponse modelConfigResponse;
+	throwIfError(client->ModelConfig(&modelConfigResponse, options.model_name_, ""), "unable to get model config");
+	inference::ModelMetadataResponse modelMetadata;
+	throwIfError(client->ModelMetadata(&modelMetadata, options.model_name_, ""), "unable to get model metadata");
 
 	std::mt19937 rng(1);
 	for (int i = 0; i < 3; ++i) {
@@ -50,10 +61,15 @@ int main(){
 		std::generate(data1.begin(), data1.end(), [&](){ return randedge(rng); });
 		inputs[1]->AppendRaw(reinterpret_cast<const uint8_t*>(data1.data()), data1.size() * sizeof(int64_t));
 
+		inference::ModelStatisticsResponse resp;
+		warnIfError(client->ModelInferenceStatistics(&resp, options.model_name_, ""), "unable to get model statistics");
+
 		std::vector<nic::InferRequestedOutput*> outputs(1);
 		nic::InferRequestedOutput::Create(&outputs[0], oname);
 		nic::InferResult* results;
 		throwIfError(client->Infer(&results, options, inputs, {outputs[0]}), "unable to run and/or get result");
+
+		warnIfError(client->ModelInferenceStatistics(&resp, options.model_name_, ""), "unable to get model statistics");
 
 		const uint8_t* r0;
 		size_t contentByteSize;
