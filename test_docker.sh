@@ -6,6 +6,6 @@ source env.sh
 for i in $(seq 1 $MAXTESTS); do
 	echo $i
 	./start_docker.sh
-	python3 client.py
+	$CMSSW_BASE/bin/slc7_amd64_gcc900/client
 	./stop_docker.sh
 done

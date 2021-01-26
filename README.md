@@ -18,6 +18,19 @@ Docker commands may need to be prepended with `sudo`.
 
 WARNING: the Triton image is 8 GB.
 
+CMSSW:
+```bash
+cmsrel CMSSW_11_3_0_pre1
+cd CMSSW_11_3_0_pre1/src
+cmsenv
+git cms-addpkg HeterogeneousCore/SonicTriton
+cd HeterogeneousCore/SonicTriton
+git clone https://github.com/kpedro88/triton_container_example
+ln -s triton_container_example bin
+scram b
+cd triton_container_example
+```
+
 Singularity*:
 ```bash
 ./pull_singularity.sh
@@ -31,11 +44,6 @@ Docker:
 Model:
 ```bash
 ./get_model.sh
-```
-
-Client:
-```bash
-./get_client.sh
 ```
 
 \* If you want to use the sandbox from cvmfs instead of building a new one, skip this step and execute the following commands:
